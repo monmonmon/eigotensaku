@@ -80,22 +80,6 @@ class EigoTensaku
     rescue Exception => e
       print "!!! ERROR !!! #{e.class}"
     end
-# BadGateway
-# BadRequest
-# ClientError
-# ConfigurationError
-# DuplicateStatus
-# Forbidden
-# GatewayTimeout
-# InternalServerError
-# NotAcceptable
-# NotFound
-# RequestTimeout
-# ServiceUnavailable
-# TooManyRequests
-# Unauthorized
-# UnprocessableEntity
-
   end
 
   def process_tweet(tweet)
