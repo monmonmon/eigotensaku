@@ -1,0 +1,7 @@
+# Ignore bundler config.
+/.bundle
+/tmp
+/memo.*
+.DS_Store
+*.swp
+.#*
