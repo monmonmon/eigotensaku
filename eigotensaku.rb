@@ -82,23 +82,30 @@ class EigoTensaku
     end
   end
 
+  # 添削メッセージをツイートに適した形にまとめて返す
+  def organize_messages(error_messages, screen_name)
+    error_messages.map do |message|
+      puts ">> #{message}"
+      "#{screen_name} #{message}".slice(0, 140)
+    end
+  end
+
   def process_tweet(tweet)
     #puts "#{tweet.id}: #{tweet.created_at}: @#{tweet.user.screen_name}: #{tweet.text}"
     # ツイート本文から余計なものを取り除いて成形
     text = clean_text(tweet.text)
     if text
-      # ツイートしてきたアカウント名
-      screen_name = tweet.user.screen_name
       # 英文添削＆お返事作成
-      error_messages = @corrector.correct(text, screen_name)
-
-      #errors.each {|e| puts "  #{e['category']}: #{e['locqualityissuetype']}: #{e['msg']} (x:#{e['fromx']}-#{e['tox']}, y:#{e['fromy']}-#{e['toy']}) replacement: #{e['replacements']}" }
-
+      error_messages = @corrector.correct(text)
+      #error_messages.each {|e| puts "  #{e['category']}: #{e['locqualityissuetype']}: #{e['msg']} (x:#{e['fromx']}-#{e['tox']}, y:#{e['fromy']}-#{e['toy']}) replacement: #{e['replacements']}" }
       if error_messages.empty?
         # no errors, good job ;)
         #self.tweet("@#{screen_name} good job ;)")
       else
-        error_messages.each do |message|
+        # 添削結果をツイート
+        screen_name = tweet.user.screen_name
+        reply_messages = organize_messages(error_messages, screen_name)
+        reply_messages.each do |message|
           self.tweet(message)
         end
       end

@@ -10,7 +10,7 @@ class LanguagetoolCorrector
   # @@baseuri = "https://languagetool.org:8081/?language=en-US&text="
   @@baseuri = "http://localhost:8000/?language=en-US&text="
 
-  def correct(text, screen_name)
+  def correct(text)
     text = URI.escape(text.strip, /[^\w\s]/).gsub(/\s+/, '+')
     query_uri = @@baseuri + text
     uri = URI.parse(query_uri)
@@ -21,9 +21,7 @@ class LanguagetoolCorrector
       messages = []
       doc.elements.each('matches/error') do |e|
         attr = e.attributes
-        message = "@ymdsmn_bot #{attr['category']}: #{attr['locqualityissuetype']}: #{attr['msg']} (x:#{attr['fromx']}-#{attr['tox']}, y:#{attr['fromy']}-#{attr['toy']}) replacement: #{attr['replacements']}"
-        puts ">> #{message}"
-        messages << message.slice(0, 140)
+        messages << "#{attr['category']}: #{attr['locqualityissuetype']}: #{attr['msg']} (x:#{attr['fromx']}-#{attr['tox']}, y:#{attr['fromy']}-#{attr['toy']}) replacement: #{attr['replacements']}"
       end
     else
       # API実行に失敗
