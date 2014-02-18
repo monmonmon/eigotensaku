@@ -23,4 +23,4 @@ tensaku = EigoTensaku.new(
         access_token,
         access_token_secret,
         )
-tensaku.run('fragile')
+tensaku.run('@eigotensaku')

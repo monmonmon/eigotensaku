@@ -48,9 +48,13 @@ class EigoTensaku
 
   # 前回実行時に処理した最後の twitter id をファイルから取得
   def get_since_id
-    File.open(@@since_id_file_path, 'r') {|f|
-      f.read.to_i
-    }
+    begin
+      File.open(@@since_id_file_path, 'r') {|f|
+        f.read.to_i
+      }
+    rescue Errno::ENOENT
+      0
+    end
   end
 
   def update_since_id(since_id)
@@ -86,7 +90,7 @@ class EigoTensaku
   def organize_messages(error_messages, screen_name)
     error_messages.map do |message|
       puts ">> #{message}"
-      "#{screen_name} #{message}".slice(0, 140)
+      "@#{screen_name} #{message}".slice(0, 140)
     end
   end
 
@@ -140,8 +144,8 @@ class EigoTensaku
     end
 
     # 最後に処理したツイートidを記録
-    new_since_id = tweets.first.id
-    puts new_since_id
-    update_since_id(new_since_id)
+    if tweets.count > 0
+      update_since_id(tweets.first.id)
+    end
   end
 end
